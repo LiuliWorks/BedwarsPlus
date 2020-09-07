@@ -1,0 +1,6 @@
+name: BedwarsPlus
+main: cn.ricoco.bedwarsplus.Main
+version: "1.0"
+author: Ricoco
+api: ["1.0.0"]
+description: A Bedwars Plugin.

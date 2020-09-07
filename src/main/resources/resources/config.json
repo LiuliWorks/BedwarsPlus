@@ -1,0 +1,38 @@
+{
+    "serverip": "minebbs.com",
+    "lang": "en_us",
+    "pos": {
+        "lobby": {"x": 0,"y": 100,"z": 0}
+    },
+    "romms": [
+        {
+            "id": "BW-0001U",
+            "name":"测试房间1",
+            "maxplayer": 16,
+            "lowplayer": 2,
+            "team": [
+                {"id": "R", "name": "Red", "color": "§c"},
+                {"id": "Y", "name": "Yellow", "color": "§e"},
+                {"id": "B", "name": "Blue", "color": "§b"},
+                {"id": "G", "name": "Green", "color": "§a"}
+            ],
+            "pos":{
+                "level": "bw1",
+                "wait": {"x": 0,"y": 100,"z": 0},
+                "R": {"x": 0,"y": 100,"z": 0},
+                "Y": {"x": 0,"y": 100,"z": 0},
+                "B": {"x": 0,"y": 100,"z": 0},
+                "G": {"x": 0,"y": 100,"z": 0},
+                "ironandgold":[
+                    {"x": 0,"y": 100,"z": 0}
+                ],
+                "diamond": [
+                    {"x": 0,"y": 100,"z": 0}
+                ],
+                "emerald": [
+                    {"x": 0,"y": 100,"z": 0}
+                ]
+            }
+        }
+    ]
+}
