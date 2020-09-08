@@ -12,15 +12,18 @@ import java.io.File;
 public class Main extends PluginBase {
     public static Main plugin;
     public static Game game=null;
+    public static String pluginName="BedwarsPlus";
     public static String JarDir=Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
     @Override
     public void onEnable() {
         plugin = this;
-        FileUtils.loadCFG("config.json","BedwarsPlus",JarDir);
-        FileUtils.loadCFG("lang/zh_cn.json","BedwarsPlus",JarDir);
-        FileUtils.loadCFG("lang/en_us.json","BedwarsPlus",JarDir);
-        Variables.configjson=JSONObject.parseObject(FileUtils.readFile("./plugins/BridgingPractise/config.json"));
-        String langpath="./plugins/BridgingPractise/lang/"+Variables.configjson.getString("lang")+".json";
+        FileUtils.loadCFG("config.json",pluginName,JarDir);
+        FileUtils.loadCFG("cage.json",pluginName,JarDir);
+        FileUtils.loadCFG("lang/zh_cn.json",pluginName,JarDir);
+        FileUtils.loadCFG("lang/en_us.json",pluginName,JarDir);
+        Variables.configjson=JSONObject.parseObject(FileUtils.readFile("./plugins/"+pluginName+"/config.json"));
+        Variables.cagejson=JSONArray.parseArray(FileUtils.readFile("./plugins/"+pluginName+"/cage.json"));
+        String langpath="./plugins/"+pluginName+"/lang/"+Variables.configjson.getString("lang")+".json";
         if(!new File(langpath).exists()){
             plugin.getLogger().warning("LANGUAGE \""+Variables.configjson.getString("lang")+".json\" NOT FOUND.LOADING EN_US.json");
             langpath="./plugins/BridgingPractise/lang/en_us.json";
