@@ -4,8 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.level.Position;
-import cn.nukkit.math.Vector3;
 import cn.ricoco.funframework.game.Room;
 import cn.ricoco.funframework.game.manager.CageManager;
 import com.alibaba.fastjson.JSONObject;
@@ -24,16 +22,35 @@ public class Commands extends Command {
         switch (args[0]){
             case "join":
                 Room room=Main.game.getRoomById(args[1]);
+                for(int i=0;i<room.playerL.size();i++){
+                    if(room.playerL.get(i).getName().equals(pname)){
+                        p.sendMessage(Variables.langjson.getString("notinroom"));
+                        return false;
+                    }
+                }
                 JSONObject json=room.otherInfo.getJSONObject("pos");
                 if(room.playerL.size()==0){
-                    Server.getInstance().loadLevel(json.getString("level"));
-                    Position ppos= Position.fromObject(new Vector3(json.getJSONObject("wait").getDouble("x"),json.getJSONObject("wait").getDouble("y"),json.getJSONObject("wait").getDouble("z")),Server.getInstance().getLevelByName(json.getString("level")));
-                    p.teleport(ppos);
-                    CageManager.CreateCage(Variables.cagejson,ppos);
-                    p.teleport(ppos);
-                    p.setGamemode(3);
-                    p.setHealth(20F);
+                    p.teleport(room.wait);
+                    CageManager.CreateCage(Variables.cagejson,room.wait);
                 }
+                p.teleport(room.wait);
+                if(room.roomStage==0) {
+                    p.setGamemode(2);
+                    room.playerL.add(p);
+                }else{
+                    p.setGamemode(3);
+                }
+                p.setHealth(20F);
+                room.allMassage(Variables.langjson.getString("joinmessage").replaceAll("%1",p.getName()).replaceAll("%2",room.playerL.size()+"").replaceAll("%3",room.maxPlayer+""));
+                break;
+            case "leave":
+                if(Main.game.getRoomByPlayer(p.getName())==null){
+                    p.sendMessage(Variables.langjson.getString("alreadyinroom"));
+                    return false;
+                }
+                break;
+            case "autojoin":
+                break;
         }
         return false;
     }

@@ -1,3 +1,6 @@
 {
-  "gamename": "Bedwars"
+  "gamename": "Bedwars",
+  "joinmessage": "%1 Joined the Room (%2/%3)",
+  "notinroom": "You are not in the room.",
+  "alreadyinroom": "You are already in room."
 }

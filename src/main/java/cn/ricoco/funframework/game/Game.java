@@ -1,5 +1,7 @@
 package cn.ricoco.funframework.game;
 
+import cn.nukkit.Player;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -16,6 +18,18 @@ public class Game {
         for (Room room : rooms) {
             if (room.getId().equals(rid)) {
                 rroom=room;
+            }
+        }
+        return rroom;
+    }
+    public Room getRoomByPlayer(String pname){
+        Room rroom = null;
+        for (Room room : rooms) {
+            ArrayList<Player> plL=room.playerL;
+            for(Player p:plL){
+                if(p.getName()==pname){
+                    rroom=room;
+                }
             }
         }
         return rroom;

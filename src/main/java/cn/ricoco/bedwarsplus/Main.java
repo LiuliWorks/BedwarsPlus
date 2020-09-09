@@ -1,9 +1,13 @@
 package cn.ricoco.bedwarsplus;
 
+import cn.nukkit.Server;
+import cn.nukkit.level.Position;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.plugin.PluginBase;
 import cn.ricoco.funframework.game.Game;
 import cn.ricoco.funframework.game.Room;
 import cn.ricoco.funframework.Utils.FileUtils;
+import cn.ricoco.funframework.game.Team;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -33,8 +37,19 @@ public class Main extends PluginBase {
         JSONArray rooms=Variables.configjson.getJSONArray("rooms");
         for(int i=0;i<rooms.size();i++){
             JSONObject room=rooms.getJSONObject(i);
-            game.addGame(new Room(room,room.getJSONArray("team"),room.getString("id"),room.getString("name"),room.getInteger("maxplayer"),room.getInteger("lowplayer")));
+            JSONObject json=room.getJSONObject("pos");
+            Room roomC=new Room(room,room.getJSONArray("team"),room.getString("id"),room.getString("name"),room.getInteger("maxplayer"),room.getInteger("lowplayer"), Position.fromObject(new Vector3(json.getJSONObject("wait").getDouble("x"),json.getJSONObject("wait").getDouble("y"),json.getJSONObject("wait").getDouble("z")), Server.getInstance().getLevelByName(json.getString("level"))));
+            JSONArray teams=room.getJSONArray("team");
+            for(int j=0;j<teams.size();j++){
+                JSONObject nteam=teams.getJSONObject(j);
+                JSONObject posJson=json.getJSONObject(nteam.getString("id"));
+                Team team=new Team(nteam.getString("id"),nteam.getString("color"),nteam.getString("name"),Position.fromObject(new Vector3(posJson.getDouble("x"),posJson.getDouble("y"),posJson.getDouble("z")),Server.getInstance().getLevelByName(json.getString("level"))),new JSONObject());
+                roomC.addTeam(team);
+            }
+            game.addGame(roomC);
         }
         plugin.getServer().getCommandMap().register("bwp",new Commands("bwp","Bedwars+"));
+        getServer().getPluginManager().registerEvents(new EventProcessor(this), this);
+        PluginTick.StartTick();
     }
 }
