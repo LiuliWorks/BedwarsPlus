@@ -14,9 +14,6 @@ public class Commands extends Command {
     }
     @Override
     public boolean execute(CommandSender sender, String s, String[] args) {
-        if (!sender.isPlayer()) {
-            return false;
-        }
         Player p= Server.getInstance().getPlayer(sender.getName());
         String levelName=p.getPosition().getLevel().getName(),pname=p.getName();
         switch (args[0]){

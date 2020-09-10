@@ -1,9 +1,11 @@
 package cn.ricoco.bedwarsplus;
 
 import cn.nukkit.Server;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.plugin.PluginBase;
+import cn.ricoco.funframework.entity.Fireball;
 import cn.ricoco.funframework.game.Game;
 import cn.ricoco.funframework.game.Room;
 import cn.ricoco.funframework.Utils.FileUtils;
@@ -21,6 +23,9 @@ public class Main extends PluginBase {
     @Override
     public void onEnable() {
         plugin = this;
+        //USED　BY FUNFRAMEWORK
+        Entity.registerEntity("FireBall", Fireball.class);
+        //USED BY THIS PLUGIN
         FileUtils.loadCFG("config.json",pluginName,JarDir);
         FileUtils.loadCFG("cage.json",pluginName,JarDir);
         FileUtils.loadCFG("lang/zh_cn.json",pluginName,JarDir);

@@ -1,5 +1,10 @@
 package cn.ricoco.bedwarsplus;
 
+import cn.ricoco.funframework.game.Game;
+import cn.ricoco.funframework.game.Room;
+
+import java.util.Date;
+
 public class PluginTick {
     public static Runner runner;
     public static Thread thread;
@@ -16,6 +21,15 @@ class Runner implements Runnable{
         while (true){
             try{
                 Thread.sleep(500);
+                if(tick==0){
+                    for(Room room: Main.game.rooms){
+                        if(room.lowPlayer>room.playerL.size()){
+                            room.otherInfo.put("waittime",new Date());
+                        }else{
+
+                        }
+                    }
+                }
                 tick++;
             }catch (Exception e){
                 e.printStackTrace();
