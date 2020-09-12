@@ -10,6 +10,8 @@
             "name":"Jurassic",
             "maxplayer": 16,
             "lowplayer": 2,
+            "time": 1000,
+            "weather": "clear",
             "wait": {
                 "default": 60,
                 "player": 5
@@ -23,6 +25,7 @@
             "pos":{
                 "level": "bw1",
                 "wait": {"x": 0,"y": 103,"z": 0},
+                "back": {"x": 0,"y": 100,"z": 0,"l": "world"},
                 "R": {"x": 73,"y": 68,"z": 10},
                 "Y": {"x": -9,"y": 68,"z": 73},
                 "B": {"x": -72,"y": 68,"z": -9},

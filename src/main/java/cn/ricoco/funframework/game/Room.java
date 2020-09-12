@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Room {
     public int maxPlayer;
@@ -17,6 +19,7 @@ public class Room {
     public String name;
     public ArrayList<Team> teamL=new ArrayList<>();
     public ArrayList<Player> playerL=new ArrayList<>();
+    public Map<Player,PlayerBackupData> playerBackupDataMap=new HashMap<>();
     public int roomStage=0;
     public Position wait;
     public JSONObject otherInfo;
