@@ -1,6 +1,9 @@
 name: BedwarsPlus
 main: cn.ricoco.bedwarsplus.Main
-version: "1.0"
+version: "1.0-DEVELOPEMENT_BUILD"
 author: Ricoco
 api: ["1.0.0"]
 description: A Bedwars Plugin.
+softdepend:
+  - PlaceholderAPI
+  - FunFramework

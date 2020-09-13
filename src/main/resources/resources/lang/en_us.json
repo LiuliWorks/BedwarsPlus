@@ -5,5 +5,17 @@
   "notinroom": "You are not in the room.",
   "alreadyinroom": "You are already in room.",
   "waitsb": ["Map:%map%","Player:%player%","Players:%stage%","%serverip%"],
-  "alreadysb": ["Map:%map%","Player:%player%","Players:%stage%","Starting in %time%s","%serverip%"]
+  "alreadysb": ["Map:%map%","Player:%player%","Players:%stage%","Starting in %time%s","%serverip%"],
+  "shop_npc": "Item Shop",
+  "enhance_npc": "Team Upgrade",
+  "countdown": {
+    "message": "Starting in %1 seconds.",
+    "30": "30",
+    "10": "10",
+    "5": "5",
+    "4": "4",
+    "3": "3",
+    "2": "2",
+    "1": "1"
+  }
 }

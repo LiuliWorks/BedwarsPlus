@@ -1,9 +1,12 @@
 package cn.ricoco.bedwarsplus;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.item.Item;
 import cn.ricoco.funframework.Utils.PlayerUtils;
@@ -24,6 +27,15 @@ public class EventProcessor implements Listener {
             new FireballSpawner(p.getPosition(),p.yaw,p.pitch);
             PlayerUtils.removeItemToPlayer(p, Item.get(385,0,1));
             event.setCancelled();
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event){
+        if(event.isCancelled()){return;}
+        Entity entity=event.getEntity();
+        if(entity.getName().equals("BedwarsNPC")){
+            event.setCancelled();
+            Server.getInstance().getLogger().info("NPC_HURTED");
         }
     }
 }

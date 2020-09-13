@@ -4,13 +4,21 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
+import cn.ricoco.funframework.Utils.OtherUtils;
 import cn.ricoco.funframework.Utils.ScoreboardUtils;
+import cn.ricoco.funframework.fakeinventories.inventory.ChestFakeInventory;
+import cn.ricoco.funframework.fakeinventories.inventory.DoubleChestFakeInventory;
 import cn.ricoco.funframework.game.PlayerBackupData;
 import cn.ricoco.funframework.game.Room;
 import cn.ricoco.funframework.game.manager.CageManager;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Commands extends Command {
     public Commands(String name, String description) {
@@ -33,12 +41,14 @@ public class Commands extends Command {
                         return false;
                     }
                 }
+                p.teleport(room.wait);
                 JSONObject json=room.otherInfo.getJSONObject("pos");
                 room.playerBackupDataMap.put(p,new PlayerBackupData(p,new JSONObject()));
                 p.getInventory().clearAll();
                 if(room.playerL.size()==0){
-                    p.teleport(room.wait);
                     CageManager.CreateCage(Variables.cagejson,room.wait);
+                }else if(room.playerL.size()>1){
+                    room.otherInfo.put("waittime",room.otherInfo.getLong("waittime")-room.otherInfo.getJSONObject("wait").getInteger("player"));
                 }
                 p.teleport(room.wait);
                 if(room.roomStage==0) {
@@ -67,6 +77,28 @@ public class Commands extends Command {
                 }
                 break;
             case "autojoin":
+                JSONArray rList=Variables.configjson.getJSONObject("autojoin").getJSONArray(args[1]);
+                ArrayList<Integer> rArray=new ArrayList<>();
+                int rAllPlayerC=0;
+                for(int i=0;i<rList.size();i++){
+                    Room rLRoom=Main.game.getRoomById(rList.getString(i));
+                    if(rLRoom.roomStage==0){
+                        rArray.add(rLRoom.playerL.size());
+                        rAllPlayerC+=rLRoom.playerL.size();
+                    }
+                }
+                if(rAllPlayerC==0){
+                    Server.getInstance().dispatchCommand(p,"bwp join "+rList.getString(OtherUtils.randInt(0,rList.size())));
+                }else{
+                    Collections.sort(rArray);
+                    Integer roomPlayers=rArray.get(rArray.size()-1);
+                    for(int i=0;i<rList.size();i++){
+                        Room rLRoom=Main.game.getRoomById(rList.getString(i));
+                        if(rLRoom.roomStage==0&&rLRoom.playerL.size()==roomPlayers){
+                            Server.getInstance().dispatchCommand(p,"bwp join "+rList.getString(i));
+                        }
+                    }
+                }
                 break;
             case "listrooms":
                 StringBuilder rMes= new StringBuilder("Rooms list of Bedwars+:\n");
@@ -78,6 +110,15 @@ public class Commands extends Command {
                 }else{
                     Server.getInstance().getLogger().info(rMes.toString());
                 }
+                break;
+            case "test":
+//                ChestFakeInventory inv=new DoubleChestFakeInventory();
+//                for(int i=0;i<inv.getSize();i++){
+//                    Item item=Item.get(1,0);
+//                    item.setCustomName(i+"");
+//                    inv.setItem(i,item);
+//                }
+//                p.addWindow(inv);
                 break;
         }
         return false;

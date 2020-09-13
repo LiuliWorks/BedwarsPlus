@@ -1,13 +1,18 @@
 package cn.ricoco.bedwarsplus;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Position;
+import cn.nukkit.math.Vector3;
+import cn.ricoco.funframework.Utils.EntityUtils;
 import cn.ricoco.funframework.Utils.LevelUtils;
 import cn.ricoco.funframework.Utils.OtherUtils;
 import cn.ricoco.funframework.Utils.ScoreboardUtils;
 import cn.ricoco.funframework.game.Room;
 import cn.ricoco.funframework.game.Team;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
 
@@ -72,8 +77,13 @@ class Runner implements Runnable {
                         } else {
                             ArrayList<Player> plL = room.playerL;
                             int time= (int) (room.otherInfo.getJSONObject("wait").getLong("default")-(OtherUtils.getTime()-room.otherInfo.getLong("waittime")));
+                            String sbStr=Variables.langjson.getJSONObject("countdown").getString(time+"");
                             for (Player p : plL) {
                                 ArrayList<String> SBArr = new ArrayList<>();
+                                if(sbStr != null){
+                                    p.sendTitle(sbStr);
+                                    p.sendMessage(Variables.langjson.getJSONObject("countdown").getString("message").replaceAll("%1",time+""));
+                                }
                                 for (int i = 0; i < SBJArr_Already.size(); i++) {
                                     SBArr.add(SBJArr_Already.getString(i).replaceAll("%time%",time+"").replaceAll("%map%", room.otherInfo.getString("name")).replaceAll("%player%", p.getName()).replaceAll("%serverip%", serverIp).replaceAll("%stage%", room.playerL.size() + "/" + room.maxPlayer));
                                 }
@@ -82,6 +92,25 @@ class Runner implements Runnable {
                             }
                             if(time<0){
                                 room.roomStage=1;
+                                JSONObject posJson=room.otherInfo.getJSONObject("pos");
+                                JSONArray shop_npcs=posJson.getJSONArray("shop_npcs");
+                                JSONArray enhance_npcs=posJson.getJSONArray("shop_npcs");
+                                for(int i=0;i<shop_npcs.size();i++) {
+                                    JSONObject nowPos=shop_npcs.getJSONObject(i);
+                                    Entity entity = EntityUtils.spawnEntity("BedwarsNPC", Position.fromObject(new Vector3(nowPos.getDouble("x"),nowPos.getDouble("y"),nowPos.getDouble("z")),room.wait.level));
+                                    entity.setNameTag(Variables.langjson.getString("shop_npc"));
+                                    entity.setNameTagAlwaysVisible(true);
+                                    entity.yaw=nowPos.getInteger("yaw");
+                                    entity.pitch=nowPos.getInteger("pitch");
+                                }
+                                for(int i=0;i<enhance_npcs.size();i++) {
+                                    JSONObject nowPos=enhance_npcs.getJSONObject(i);
+                                    Entity entity = EntityUtils.spawnEntity("BedwarsNPC", Position.fromObject(new Vector3(nowPos.getDouble("x"),nowPos.getDouble("y"),nowPos.getDouble("z")),room.wait.level));
+                                    entity.setNameTag(Variables.langjson.getString("enhance_npc"));
+                                    entity.setNameTagAlwaysVisible(true);
+                                    entity.yaw=nowPos.getInteger("yaw");
+                                    entity.pitch=nowPos.getInteger("pitch");
+                                }
                                 int tcount=0;
                                 for (Player p : plL) {
                                     Team t=room.teamL.get(tcount);

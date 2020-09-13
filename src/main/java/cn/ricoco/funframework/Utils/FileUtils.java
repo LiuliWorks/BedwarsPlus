@@ -1,10 +1,15 @@
 package cn.ricoco.funframework.Utils;
 
+import cn.nukkit.Server;
+
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardCopyOption;
 import java.util.Base64;
+import java.util.Date;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -103,5 +108,40 @@ public class FileUtils {
             ReadJar("resources/"+fname,JarDir,"./plugins/"+pluginName+"/"+fname);
         }
         return readFile("./plugins/"+pluginName+"/"+fname);
+    }
+    public static void downloadPlugin(String urlStr,String pluginName) throws IOException {
+        long startTime=new Date().getTime();
+        Server.getInstance().getLogger().warning("CANNOT FOUND PLUGIN "+pluginName+"!DOWNLOADING FROM "+urlStr);
+        File jar = new File(Server.getInstance().getPluginPath(), urlStr.substring(urlStr.lastIndexOf('/')+1,urlStr.length()));
+        if (jar.exists()){
+            return;
+        }
+        File tmp = new File(jar.getPath()+".au");
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(3*1000);
+        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+        InputStream is = conn.getInputStream();
+        int totalSize = conn.getContentLength(),nowSize=0,lastSize=-1;
+        FileOutputStream os = new FileOutputStream(tmp);
+        byte[] buf = new byte[4096];
+        int size = 0;
+        while((size = is.read(buf)) != -1) {
+            os.write(buf, 0, size);
+            nowSize+=size;
+            int progcess=100*nowSize/totalSize;
+            if(progcess%5==0&&progcess!=lastSize){
+                Server.getInstance().getLogger().info("DOWNLOADING "+pluginName+" PROGCESS:"+(100*nowSize/totalSize)+"%");
+                lastSize=progcess;
+            }
+        }
+        is.close();
+        os.flush();
+        os.close();
+        if(jar.exists())
+            jar.delete();
+        tmp.renameTo(jar);
+        Server.getInstance().getPluginManager().loadPlugin(jar.getPath());
+        Server.getInstance().getLogger().info("DOWNLOAD "+pluginName+" COMPLETE("+((new Date().getTime()-startTime)/1000)+"s)");
     }
 }

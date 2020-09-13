@@ -24,7 +24,6 @@ public class Room {
     public Position wait;
     public JSONObject otherInfo;
     public Room(JSONObject otherInfo,JSONArray teams,String id,String name,int maxPlayer,int lowPlayer,Position wait){
-        Server.getInstance().loadLevel(otherInfo.getJSONObject("pos").getString("level"));
         this.maxPlayer=maxPlayer;
         this.lowPlayer=lowPlayer;
         this.teams=teams.size();
