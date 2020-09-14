@@ -27,7 +27,7 @@ public class Game {
         for (Room room : rooms) {
             ArrayList<Player> plL=room.playerL;
             for(Player p:plL){
-                if(p.getName()==pname){
+                if(p.getName().equals(pname)){
                     rroom=room;
                 }
             }

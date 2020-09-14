@@ -21,4 +21,9 @@ public class Team {
         this.spawn=spawn;
         this.otherInfo=otherInfo;
     }
+    public void allMassage(String msg){
+        for(Player p:playerL){
+            p.sendMessage(msg);
+        }
+    }
 }

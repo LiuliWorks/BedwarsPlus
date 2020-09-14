@@ -44,4 +44,16 @@ public class Room {
             p.sendMessage(msg);
         }
     }
+    public Team getTeamByPlayer(String pname){
+        Team fteam = null;
+        for (Team team:teamL) {
+            ArrayList<Player> plL=team.playerL;
+            for(Player p:plL){
+                if(p.getName().equals(pname)){
+                    fteam=team;
+                }
+            }
+        }
+        return fteam;
+    }
 }

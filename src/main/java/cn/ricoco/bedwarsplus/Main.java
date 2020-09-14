@@ -34,10 +34,11 @@ public class Main extends PluginBase {
         getServer().getServiceManager().register(FakeInventories.class, fakeInventories, this, ServicePriority.HIGHEST);
         getServer().getPluginManager().registerEvents(new FakeInventoriesListener(fakeInventories), this);
         //USED BY THIS PLUGIN
-        init.initPlugin();
+        init.checkPlugin();
         Entity.registerEntity("BedwarsNPC", BedwarsNPC.class);
         FileUtils.loadCFG("config.json",pluginName,JarDir);
         FileUtils.loadCFG("cage.json",pluginName,JarDir);
+        FileUtils.loadCFG("shop.json",pluginName,JarDir);
         FileUtils.loadCFG("lang/zh_cn.json",pluginName,JarDir);
         FileUtils.loadCFG("lang/en_us.json",pluginName,JarDir);
         Variables.configjson=JSONObject.parseObject(FileUtils.readFile("./plugins/"+pluginName+"/config.json"));

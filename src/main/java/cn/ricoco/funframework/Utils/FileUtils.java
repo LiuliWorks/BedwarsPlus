@@ -120,7 +120,7 @@ public class FileUtils {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(3*1000);
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36");
         InputStream is = conn.getInputStream();
         int totalSize = conn.getContentLength(),nowSize=0,lastSize=-1;
         FileOutputStream os = new FileOutputStream(tmp);
