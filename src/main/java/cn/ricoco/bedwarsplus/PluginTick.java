@@ -2,6 +2,7 @@ package cn.ricoco.bedwarsplus;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
@@ -9,9 +10,11 @@ import cn.ricoco.funframework.Utils.EntityUtils;
 import cn.ricoco.funframework.Utils.LevelUtils;
 import cn.ricoco.funframework.Utils.OtherUtils;
 import cn.ricoco.funframework.Utils.ScoreboardUtils;
+import cn.ricoco.funframework.entity.FloatingTextSpawner;
 import cn.ricoco.funframework.game.Room;
 import cn.ricoco.funframework.game.Team;
 import cn.ricoco.funframework.game.manager.CageManager;
+import cn.ricoco.funframework.game.manager.FloatingItem;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -34,9 +37,10 @@ class Runner implements Runnable {
         int SBCount = 0;
         String sbTitle = Variables.langjson.getString("gamename");
         String[] sbTitleL = sbTitle.split("");
-        JSONArray SBJArr_Wait = Variables.langjson.getJSONArray("waitsb");
-        JSONArray SBJArr_Already = Variables.langjson.getJSONArray("alreadysb");
-        JSONArray SBJArr_InGame = Variables.langjson.getJSONArray("ingamesb");
+        JSONObject SBJObj_SBs = Variables.langjson.getJSONObject("scoreboards");
+        JSONArray SBJArr_Wait = SBJObj_SBs.getJSONArray("waitsb");
+        JSONArray SBJArr_Already = SBJObj_SBs.getJSONArray("alreadysb");
+        JSONArray SBJArr_InGame = SBJObj_SBs.getJSONArray("ingamesb");
         while (true) {
             try {
                 StringBuilder SB_Title = new StringBuilder();
@@ -138,6 +142,32 @@ class Runner implements Runnable {
                                         t.teamStage=2;
                                     }
                                 }
+                                JSONArray diamond_spawn=room.otherInfo.getJSONObject("pos").getJSONArray("diamond");
+                                JSONObject gene_json=new JSONObject();
+                                JSONArray dia_arr=new JSONArray();
+                                JSONArray em_arr=new JSONArray();
+                                gene_json.put("diamond_time",0);
+                                gene_json.put("emerald_time",0);
+                                gene_json.put("diamond_nowtime",gene_json.getInteger("diamond_time"));
+                                gene_json.put("emerald_nowtime",gene_json.getInteger("emerald_time"));
+                                for(Object diamond_single_obj:diamond_spawn){
+                                    JSONObject diamond_single= (JSONObject) diamond_single_obj;
+                                    Position pos=Position.fromObject(new Vector3(diamond_single.getDouble("x"),diamond_single.getDouble("y")+4,diamond_single.getDouble("z")),room.wait.level);
+                                    FloatingTextSpawner.spawner(pos,Variables.langjson.getJSONObject("items").getString("diamond"));
+                                    FloatingTextSpawner.spawner(Position.fromObject(new Vector3(pos.x, pos.y-0.5, pos.z), pos.level),Variables.langjson.getJSONObject("items").getString("spawn").replaceAll("%1",gene_json.getInteger("diamond_nowtime")+""));
+                                    new FloatingItem(Item.get(57,0),(float)pos.x,(float)(pos.y-0.5),(float)pos.z).addFloatingItem(pos.level);
+                                }
+                                JSONArray emerald_spawn=room.otherInfo.getJSONObject("pos").getJSONArray("emerald");
+                                for(Object emerald_single_obj:emerald_spawn){
+                                    JSONObject emerald_single= (JSONObject) emerald_single_obj;
+                                    Position pos=Position.fromObject(new Vector3(emerald_single.getDouble("x"),emerald_single.getDouble("y")+4,emerald_single.getDouble("z")),room.wait.level);
+                                    FloatingTextSpawner.spawner(pos,Variables.langjson.getJSONObject("items").getString("emerald"));
+                                    FloatingTextSpawner.spawner(Position.fromObject(new Vector3(pos.x, pos.y-0.5, pos.z), pos.level),Variables.langjson.getJSONObject("items").getString("spawn").replaceAll("%1",gene_json.getInteger("emerald_nowtime")+""));
+                                    new FloatingItem(Item.get(133,0),(float)pos.x,(float)(pos.y-0.5),(float)pos.z).addFloatingItem(pos.level);
+                                }
+                                gene_json.put("diamond",dia_arr);
+                                gene_json.put("emerald",em_arr);
+                                room.otherInfo.put("generators",gene_json);
                                 CageManager.RemoveCage(Variables.cagejson,Position.fromObject(new Vector3(room.wait.x,room.wait.y-1,room.wait.z),room.wait.level));
                             }
                         }
@@ -146,14 +176,14 @@ class Runner implements Runnable {
                             ArrayList<String> SB_RoomStats = new ArrayList<>();
                             for(Team team1:room.teamL){
                                 if(team1.teamStage==0){
-                                    SB_RoomStats.add(team1.color+team1.id+" §f"+team1.name+": §a✔");
+                                    SB_RoomStats.add(SBJObj_SBs.getString("teamsb").replaceAll("%teamstat%",SBJObj_SBs.getString("team_with_bed").replaceAll("%players%",team1.playerL.size()+"")).replaceAll("%teamcolor%", team1.color).replaceAll("%teamname%", team1.name).replaceAll("%teamid%",team1.id));
                                 }else if(team1.teamStage==1){
-                                    SB_RoomStats.add(team1.color+team1.id+" §f"+team1.name+": §a"+team1.playerL.size());
+                                    SB_RoomStats.add(SBJObj_SBs.getString("teamsb").replaceAll("%teamstat%",SBJObj_SBs.getString("team_alive").replaceAll("%players%",team1.playerL.size()+"")).replaceAll("%teamcolor%", team1.color).replaceAll("%teamname%", team1.name).replaceAll("%teamid%",team1.id));
                                 }else if(team1.teamStage==2){
-                                    SB_RoomStats.add(team1.color+team1.id+" §f"+team1.name+": §c✗");
+                                    SB_RoomStats.add(SBJObj_SBs.getString("teamsb").replaceAll("%teamstat%",SBJObj_SBs.getString("team_eliminated").replaceAll("%players%",team1.playerL.size()+"")).replaceAll("%teamcolor%", team1.color).replaceAll("%teamname%", team1.name).replaceAll("%teamid%",team1.id));
                                 }
                                 if(team1.equals(team)){
-                                    SB_RoomStats.set(SB_RoomStats.size()-1,SB_RoomStats.get(SB_RoomStats.size()-1)+" "+Variables.langjson.getString("yourteam"));
+                                    SB_RoomStats.set(SB_RoomStats.size()-1,SB_RoomStats.get(SB_RoomStats.size()-1)+" "+SBJObj_SBs.getString("yourteam"));
                                 }
                             }
                             for(Player p:team.playerL){

@@ -7,8 +7,10 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.plugin.service.ServicePriority;
 import cn.ricoco.bedwarsplus.entity.BedwarsNPC;
+import cn.ricoco.bedwarsplus.managers.ShopManager;
 import cn.ricoco.bedwarsplus.others.init;
 import cn.ricoco.funframework.entity.Fireball;
+import cn.ricoco.funframework.entity.FloatingText;
 import cn.ricoco.funframework.fakeinventories.FakeInventoriesListener;
 import cn.ricoco.funframework.fakeinventories.inventory.FakeInventories;
 import cn.ricoco.funframework.game.Game;
@@ -29,7 +31,9 @@ public class Main extends PluginBase {
     public void onEnable() {
         plugin = this;
         //USED　BY FUNFRAMEWORK
+        new File("./plugins/FunFramework/MAP_BACKUP").mkdirs();
         Entity.registerEntity("FireBall", Fireball.class);
+        Entity.registerEntity("Bedwars+_FloatingText", FloatingText.class);
         FakeInventories fakeInventories = new FakeInventories();
         getServer().getServiceManager().register(FakeInventories.class, fakeInventories, this, ServicePriority.HIGHEST);
         getServer().getPluginManager().registerEvents(new FakeInventoriesListener(fakeInventories), this);
@@ -41,6 +45,7 @@ public class Main extends PluginBase {
         FileUtils.loadCFG("shop.json",pluginName,JarDir);
         FileUtils.loadCFG("lang/zh_cn.json",pluginName,JarDir);
         FileUtils.loadCFG("lang/en_us.json",pluginName,JarDir);
+        FileUtils.loadCFG("lang/ko_kr.json",pluginName,JarDir);//Korean translate by JuChanMin
         Variables.configjson=JSONObject.parseObject(FileUtils.readFile("./plugins/"+pluginName+"/config.json"));
         Variables.cagejson=JSONArray.parseArray(FileUtils.readFile("./plugins/"+pluginName+"/cage.json"));
         String langpath="./plugins/"+pluginName+"/lang/"+Variables.configjson.getString("lang")+".json";
@@ -67,6 +72,7 @@ public class Main extends PluginBase {
         }
         plugin.getServer().getCommandMap().register("bwp",new Commands("bwp","Bedwars+"));
         getServer().getPluginManager().registerEvents(new EventProcessor(this), this);
+        getServer().getPluginManager().registerEvents(new ShopManager(), this);
         PluginTick.StartTick();
     }
     @Override
