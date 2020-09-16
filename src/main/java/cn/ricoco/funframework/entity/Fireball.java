@@ -36,7 +36,7 @@ public class Fireball extends EntityProjectile implements EntityExplosive {
 
     @Override
     public float getGravity() {
-        return 0.01f;
+        return 0f;
     }
 
     @Override

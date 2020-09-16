@@ -7,6 +7,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.plugin.service.ServicePriority;
 import cn.ricoco.bedwarsplus.entity.BedwarsNPC;
+import cn.ricoco.bedwarsplus.entity.BridgeEgg;
 import cn.ricoco.bedwarsplus.managers.ShopManager;
 import cn.ricoco.bedwarsplus.others.init;
 import cn.ricoco.funframework.entity.Fireball;
@@ -40,6 +41,7 @@ public class Main extends PluginBase {
         //USED BY THIS PLUGIN
         init.checkPlugin();
         Entity.registerEntity("BedwarsNPC", BedwarsNPC.class);
+        Entity.registerEntity("BridgeEgg", BridgeEgg.class);
         FileUtils.loadCFG("config.json",pluginName,JarDir);
         FileUtils.loadCFG("cage.json",pluginName,JarDir);
         FileUtils.loadCFG("shop.json",pluginName,JarDir);

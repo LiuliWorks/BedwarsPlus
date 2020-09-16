@@ -34,4 +34,14 @@ public class Game {
         }
         return rroom;
     }
+    public Room getRoomByLevel(String lname){
+        Room rroom = null;
+        for (Room room : rooms) {
+            String Level=room.wait.level.getName();
+            if(Level.equals(lname)){
+                rroom=room;
+            }
+        }
+        return rroom;
+    }
 }
