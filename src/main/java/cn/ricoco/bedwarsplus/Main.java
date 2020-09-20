@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.File;
+import java.util.Date;
 
 public class Main extends PluginBase {
     public static Main plugin;
@@ -31,6 +32,7 @@ public class Main extends PluginBase {
     @Override
     public void onEnable() {
         plugin = this;
+        Long stime=new Date().getTime();
         //USED　BY FUNFRAMEWORK
         new File("./plugins/FunFramework/MAP_BACKUP").mkdirs();
         Entity.registerEntity("FireBall", Fireball.class);
@@ -72,10 +74,19 @@ public class Main extends PluginBase {
             }
             game.addGame(roomC);
         }
+        Variables.disableEntityDMG.add("ENTITY_EXPLOSION");
+        Variables.disableEntityDMG.add("ENTITY_ATTACK");
         plugin.getServer().getCommandMap().register("bwp",new Commands("bwp","Bedwars+"));
         getServer().getPluginManager().registerEvents(new EventProcessor(this), this);
         getServer().getPluginManager().registerEvents(new ShopManager(), this);
         PluginTick.StartTick();
+        this.getLogger().info(" _____   _____   _____   _          __   ___   _____    _____   _____   _       _   _   _____ ");
+        this.getLogger().info("|  _  \\ | ____| |  _  \\ | |        / /  /   | |  _  \\  /  ___/ |  _  \\ | |     | | | | /  ___/");
+        this.getLogger().info("| |_| | | |__   | | | | | |  __   / /  / /| | | |_| |  | |___  | |_| | | |     | | | | | |___ ");
+        this.getLogger().info("|  _  { |  __|  | | | | | | /  | / /  / / | | |  _  /  \\___  \\ |  ___/ | |     | | | | \\___  \\");
+        this.getLogger().info("| |_| | | |___  | |_| | | |/   |/ /  / /  | | | | \\ \\   ___| | | |     | |___  | |_| |  ___| |");
+        this.getLogger().info("|_____/ |_____| |_____/ |___/|___/  /_/   |_| |_|  \\_\\ /_____/ |_|     |_____| \\_____/ /_____/ ");
+        this.getLogger().info("By RicoGG.§aSuccessfuly Loaded in §e"+(new Date().getTime()-stime)+"ms!");
     }
     @Override
     public void onDisable() {

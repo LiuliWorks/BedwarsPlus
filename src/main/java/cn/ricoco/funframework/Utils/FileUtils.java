@@ -116,7 +116,7 @@ public class FileUtils {
         if (jar.exists()){
             return;
         }
-        File tmp = new File(jar.getPath()+".au");
+        File tmp = new File(jar.getPath()+".tmp");
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(3*1000);

@@ -1,6 +1,8 @@
 package cn.ricoco.funframework.Utils;
 
 import cn.nukkit.Player;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 
 import java.util.Map;
@@ -16,5 +18,11 @@ public class PlayerUtils {
         Map<Integer,Item> invm=p.getInventory().getContents();
         invm.put(slot,item);
         p.getInventory().setContents(invm);
+    }
+    public static Boolean checkDeath(EntityDamageByEntityEvent event){
+        return (event.getEntity().getHealth() - event.getDamage()) <= 0.3;
+    }
+    public static Boolean checkDeath(EntityDamageEvent event){
+        return (event.getEntity().getHealth() - event.getDamage()) <= 0.3;
     }
 }

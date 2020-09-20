@@ -19,6 +19,17 @@
     "diamond": "§bDiamond",
     "spawn": "Spawn in %1 seconds"
   },
+  "kill": {
+    "kill": "%killed_color%%killed_name% §fwas killed by %killer_color%%killer_name%",
+    "void": "%killed_color%%killed_name% §ffell in to the void",
+    "void_kill": "%killed_color%%killed_name% §ffell in to the void",
+    "fall": "%killed_color%%killed_name% §ffall down",
+    "block_explosion": "%killed_color%%killed_name% §fexploded",
+    "fire": "%killed_color%%killed_name% §fburned to death",
+    "fire_tick": "%killed_color%%killed_name% §fburned to death",
+    "lava": "%killed_color%%killed_name% §fburned to death",
+    "unknown": "%killed_color%%killed_name% §fdead"
+  },
   "allroomfull": "We are sorry.ALL Rooms are full!Come back later.",
   "shop_npc": "Item Shop",
   "enhance_npc": "Team Upgrade",

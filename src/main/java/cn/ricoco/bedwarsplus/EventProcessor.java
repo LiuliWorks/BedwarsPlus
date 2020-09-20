@@ -17,10 +17,12 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.ricoco.bedwarsplus.entity.BridgeEgg;
+import cn.ricoco.funframework.Utils.OtherUtils;
 import cn.ricoco.funframework.Utils.PlayerUtils;
-import cn.ricoco.funframework.entity.Fireball;
 import cn.ricoco.funframework.entity.FireballSpawner;
 import cn.ricoco.funframework.game.Room;
+import cn.ricoco.funframework.game.Team;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
 
@@ -65,6 +67,8 @@ public class EventProcessor implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event){
         if(event.isCancelled()){return;}
         Entity entity=event.getEntity();
+        Room room=Main.game.getRoomByLevel(entity.getPosition().level.getName());
+        if(room==null){return;}
         if(entity.getName().equals("BedwarsNPC")){
             event.setCancelled();
             if(entity.getNameTag().equals(Variables.langjson.getString("enhance_npc"))){
@@ -74,12 +78,33 @@ public class EventProcessor implements Listener {
                 System.out.println("SHOP_NPC_BW+");
             }
         }
+        if(entity instanceof Player){
+            Player p=(Player)entity;
+            if(PlayerUtils.checkDeath(event)){
+                Team dmgTeam=room.getTeamByPlayer(event.getDamager().getName());
+                Team killedTeam=room.getTeamByPlayer(p.getName());
+                room.allMassage(Variables.langjson.getJSONObject("kill").getString("kill").replaceAll("%killed_name%",p.getName()).replaceAll("%killed_color%", killedTeam.color).replaceAll("%killer_name%",event.getDamager().getName()).replaceAll("%killer_color%", dmgTeam.color));
+            }else{
+                JSONObject atkInfo=new JSONObject();
+                atkInfo.put("lastp",event.getDamager().getName());
+                atkInfo.put("time", OtherUtils.getTime());
+                room.otherInfo.put("lastatk",atkInfo);
+            }
+        }else{
+
+        }
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event){
         if(event.isCancelled()){return;}
         Entity entity=event.getEntity();
+        Room room=Main.game.getRoomByLevel(entity.getPosition().level.getName());
+        if(room==null){return;}
         if(entity.getName().equals("BedwarsNPC")){
+            event.setCancelled();
+        }
+        String dmgCause=event.getCause().toString();
+        if(!Variables.disableEntityDMG.contains(dmgCause)){
             event.setCancelled();
         }
     }

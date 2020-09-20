@@ -118,8 +118,13 @@ class Runner implements Runnable {
                                     entity.pitch=nowPos.getInteger("pitch");
                                 }
                                 int tcount=0;
+                                JSONObject lastAtk=new JSONObject();
                                 for (Player p : plL) {
                                     Team t=room.teamL.get(tcount);
+                                    JSONObject atkInfo=new JSONObject();
+                                    atkInfo.put("lastp","null");
+                                    atkInfo.put("time",OtherUtils.getTime());
+                                    lastAtk.put(p.getName(),atkInfo);
                                     t.playerL.add(p);
                                     p.teleport(t.spawn);
                                     p.getInventory().clearAll();
@@ -135,6 +140,7 @@ class Runner implements Runnable {
                                         tcount=0;
                                     }
                                 }
+                                room.otherInfo.put("lastatk",lastAtk);
                                 for(Team t:room.teamL){
                                     if(t.playerL.size()>0){
                                         t.teamStage=0;
