@@ -86,5 +86,13 @@
             "3": 20
         }
     },
-    "events": []
+    "events": [
+        {"type":"DIAMOND","tier":2,"tier_str":"II","time":360},
+        {"type":"EMERALD","tier":2,"tier_str":"II","time":720},
+        {"type":"DIAMOND","tier":3,"tier_str":"III","time":1080},
+        {"type":"EMERALD","tier":3,"tier_str":"III","time":1740},
+        {"type":"BED","time":1800},
+        {"type":"DRAGON","time":2400},
+        {"type":"STOP","time":3000}
+    ]
 }

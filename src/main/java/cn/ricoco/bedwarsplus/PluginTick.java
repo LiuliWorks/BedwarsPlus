@@ -152,14 +152,14 @@ class Runner implements Runnable {
                                 JSONObject gene_json=new JSONObject();
                                 JSONArray dia_arr=new JSONArray();
                                 JSONArray em_arr=new JSONArray();
-                                gene_json.put("diamond_time",0);
-                                gene_json.put("emerald_time",0);
+                                gene_json.put("diamond_time",Variables.configjson.getJSONObject("resources").getJSONObject("diamond").getInteger("1"));
+                                gene_json.put("emerald_time",Variables.configjson.getJSONObject("resources").getJSONObject("emerald").getInteger("1"));
                                 gene_json.put("diamond_nowtime",gene_json.getInteger("diamond_time"));
                                 gene_json.put("emerald_nowtime",gene_json.getInteger("emerald_time"));
                                 for(Object diamond_single_obj:diamond_spawn){
                                     JSONObject diamond_single= (JSONObject) diamond_single_obj;
                                     Position pos=Position.fromObject(new Vector3(diamond_single.getDouble("x"),diamond_single.getDouble("y")+4,diamond_single.getDouble("z")),room.wait.level);
-                                    FloatingTextSpawner.spawner(pos,Variables.langjson.getJSONObject("items").getString("diamond"));
+                                    FloatingTextSpawner.spawner(pos,Variables.langjson.getJSONObject("items").getString("diamond").replaceAll("%1",Variables.langjson.getJSONObject("tier").getString("1")));
                                     FloatingTextSpawner.spawner(Position.fromObject(new Vector3(pos.x, pos.y-0.5, pos.z), pos.level),Variables.langjson.getJSONObject("items").getString("spawn").replaceAll("%1",gene_json.getInteger("diamond_nowtime")+""));
                                     new FloatingItem(Item.get(57,0),(float)pos.x,(float)(pos.y-0.5),(float)pos.z).addFloatingItem(pos.level);
                                 }
@@ -167,7 +167,8 @@ class Runner implements Runnable {
                                 for(Object emerald_single_obj:emerald_spawn){
                                     JSONObject emerald_single= (JSONObject) emerald_single_obj;
                                     Position pos=Position.fromObject(new Vector3(emerald_single.getDouble("x"),emerald_single.getDouble("y")+4,emerald_single.getDouble("z")),room.wait.level);
-                                    FloatingTextSpawner.spawner(pos,Variables.langjson.getJSONObject("items").getString("emerald"));
+                                    JSONObject aEm=new JSONObject();
+                                    FloatingTextSpawner.spawner(pos,Variables.langjson.getJSONObject("items").getString("emerald").replaceAll("%1",Variables.langjson.getJSONObject("tier").getString("1")));
                                     FloatingTextSpawner.spawner(Position.fromObject(new Vector3(pos.x, pos.y-0.5, pos.z), pos.level),Variables.langjson.getJSONObject("items").getString("spawn").replaceAll("%1",gene_json.getInteger("emerald_nowtime")+""));
                                     new FloatingItem(Item.get(133,0),(float)pos.x,(float)(pos.y-0.5),(float)pos.z).addFloatingItem(pos.level);
                                 }

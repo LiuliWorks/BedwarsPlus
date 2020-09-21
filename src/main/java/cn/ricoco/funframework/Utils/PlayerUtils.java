@@ -19,10 +19,16 @@ public class PlayerUtils {
         invm.put(slot,item);
         p.getInventory().setContents(invm);
     }
-    public static Boolean checkDeath(EntityDamageByEntityEvent event){
+    public static Boolean checkDeath(EntityDamageByEntityEvent event,Boolean ifCancel){
+        if(ifCancel){
+            event.setCancelled();
+        }
         return (event.getEntity().getHealth() - event.getDamage()) <= 0.3;
     }
-    public static Boolean checkDeath(EntityDamageEvent event){
+    public static Boolean checkDeath(EntityDamageEvent event,Boolean ifCancel){
+        if(ifCancel){
+            event.setCancelled();
+        }
         return (event.getEntity().getHealth() - event.getDamage()) <= 0.3;
     }
 }

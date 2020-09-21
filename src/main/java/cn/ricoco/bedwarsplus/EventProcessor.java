@@ -78,11 +78,12 @@ public class EventProcessor implements Listener {
                 System.out.println("SHOP_NPC_BW+");
             }
         }
-        if(entity instanceof Player){
-            Player p=(Player)entity;
-            if(PlayerUtils.checkDeath(event)){
+
+        Player p=(Player)entity;
+        Team killedTeam=room.getTeamByPlayer(p.getName());
+        if(event.getDamager() instanceof Player){
+            if(PlayerUtils.checkDeath(event,true)){
                 Team dmgTeam=room.getTeamByPlayer(event.getDamager().getName());
-                Team killedTeam=room.getTeamByPlayer(p.getName());
                 room.allMassage(Variables.langjson.getJSONObject("kill").getString("kill").replaceAll("%killed_name%",p.getName()).replaceAll("%killed_color%", killedTeam.color).replaceAll("%killer_name%",event.getDamager().getName()).replaceAll("%killer_color%", dmgTeam.color));
             }else{
                 JSONObject atkInfo=new JSONObject();
@@ -91,7 +92,9 @@ public class EventProcessor implements Listener {
                 room.otherInfo.put("lastatk",atkInfo);
             }
         }else{
-
+            if(PlayerUtils.checkDeath(event,true)){
+                room.allMassage(Variables.langjson.getJSONObject("kill").getString("kill").replaceAll("%killed_name%",p.getName()).replaceAll("%killed_color%", killedTeam.color).replaceAll("%killer_name%",event.getDamager().getName()).replaceAll("%killer_color%", ""));
+            }
         }
     }
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -125,6 +128,11 @@ public class EventProcessor implements Listener {
         Room room=Main.game.getRoomByPlayer(p.getName());
         if(room==null){return;}
         if(room.roomStage==0||p.getGamemode()==3){
+            event.setCancelled();
+        }
+        Position pos=p.getPosition();
+        int underBlockId=Position.fromObject(new Vector3(pos.x, pos.y-1, pos.z), pos.level).getLevelBlock().getId()+Position.fromObject(new Vector3(pos.x, pos.y-2, pos.z), pos.level).getLevelBlock().getId();
+        if(underBlockId==0){
             event.setCancelled();
         }
     }
