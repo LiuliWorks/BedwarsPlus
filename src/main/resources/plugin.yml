@@ -4,6 +4,7 @@ version: "1.0-DEVELOPEMENT_BUILD"
 author: Ricoco
 api: ["1.0.0"]
 description: A Bedwars Plugin likes hypixel.
+website: https://bedwar.cf
 softdepend:
   - PlaceholderAPI
   - FunFramework

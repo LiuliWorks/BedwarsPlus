@@ -91,15 +91,13 @@ public class FireBallExplosion extends Explosion {
     public boolean explodeB() {
         LongArraySet updateBlocks = new LongArraySet();
         double yield = (1d / this.size) * 100d;
-        if (this.what instanceof Entity) {
-            EntityExplodeEvent ev = new EntityExplodeEvent((Entity) this.what, this.source, this.affectedBlocks, yield);
-            this.level.getServer().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
-                return false;
-            } else {
-                yield = ev.getYield();
-                this.affectedBlocks = ev.getBlockList();
-            }
+        EntityExplodeEvent ev = new EntityExplodeEvent((Entity) this.what, this.source, this.affectedBlocks, yield);
+        this.level.getServer().getPluginManager().callEvent(ev);
+        if (ev.isCancelled()) {
+            return false;
+        } else {
+            yield = ev.getYield();
+            this.affectedBlocks = ev.getBlockList();
         }
         double explosionSize = this.size * 2d;
         double minX = NukkitMath.floorDouble(this.source.x - explosionSize - 1);
@@ -109,7 +107,7 @@ public class FireBallExplosion extends Explosion {
         double minZ = NukkitMath.floorDouble(this.source.z - explosionSize - 1);
         double maxZ = NukkitMath.ceilDouble(this.source.z + explosionSize + 1);
         AxisAlignedBB explosionBB = new SimpleAxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
-        Entity[] list = this.level.getNearbyEntities(explosionBB, this.what instanceof Entity ? (Entity) this.what : null);
+        Entity[] list = this.level.getNearbyEntities(explosionBB, this.what != null ? (Entity) this.what : null);
         for (Entity entity : list) {
             double distance = entity.distance(this.source) / explosionSize;
             if (distance <= 1) {
@@ -117,10 +115,8 @@ public class FireBallExplosion extends Explosion {
                 int exposure = 1;
                 double impact = (1 - distance) * exposure;
                 int damage = (int) (((impact * impact + impact) / 2) * 5 * explosionSize + 1)/5;
-                if (this.what instanceof Entity) {
+                if (this.what != null) {
                     entity.attack(new EntityDamageByEntityEvent((Entity) this.what, entity, DamageCause.ENTITY_EXPLOSION, damage));
-                } else if (this.what instanceof Block) {
-                    entity.attack(new EntityDamageByBlockEvent((Block) this.what, entity, DamageCause.BLOCK_EXPLOSION, damage));
                 } else {
                     entity.attack(new EntityDamageEvent(entity, DamageCause.BLOCK_EXPLOSION, damage));
                 }
@@ -131,7 +127,7 @@ public class FireBallExplosion extends Explosion {
         BlockEntity container;
         for (Block block : this.affectedBlocks) {
             if (block.getId() == Block.TNT) {
-                ((BlockTNT) block).prime(RandUtils.rand(10, 30), this.what instanceof Entity ? (Entity) this.what : null);
+                ((BlockTNT) block).prime(RandUtils.rand(10, 30), this.what != null ? (Entity) this.what : null);
             } else if (block.getId() == Block.BED_BLOCK && (block.getDamage() & 0x08) == 0x08) {
                 this.level.setBlockAt((int) block.x, (int) block.y, (int) block.z, BlockID.AIR);
                 continue;
@@ -156,10 +152,10 @@ public class FireBallExplosion extends Explosion {
                 Vector3 sideBlock = pos.getSide(side);
                 long index = Hash.hashBlock((int) sideBlock.x, (int) sideBlock.y, (int) sideBlock.z);
                 if (!this.affectedBlocks.contains(sideBlock) && !updateBlocks.contains(index)) {
-                    BlockUpdateEvent ev = new BlockUpdateEvent(this.level.getBlock(sideBlock));
+                    BlockUpdateEvent ev1 = new BlockUpdateEvent(this.level.getBlock(sideBlock));
                     this.level.getServer().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
-                        ev.getBlock().onUpdate(Level.BLOCK_UPDATE_NORMAL);
+                    if (!ev1.isCancelled()) {
+                        ev1.getBlock().onUpdate(Level.BLOCK_UPDATE_NORMAL);
                     }
                     updateBlocks.add(index);
                 }

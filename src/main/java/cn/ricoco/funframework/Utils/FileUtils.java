@@ -26,6 +26,7 @@ public class FileUtils {
         outfile.close();
     }
     public static void Copydir(String oridir,String todir) throws IOException {
+        new File(todir).mkdirs();
         File[] flist=new File(oridir).listFiles();
         for(int i=0;i<flist.length;i++){
             if(flist[i].isFile()){

@@ -18,6 +18,8 @@ import cn.ricoco.funframework.game.Game;
 import cn.ricoco.funframework.game.Room;
 import cn.ricoco.funframework.Utils.FileUtils;
 import cn.ricoco.funframework.game.Team;
+import cn.ricoco.funframework.map.MapBackup;
+import cn.ricoco.funframework.map.MapProtect;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -40,6 +42,7 @@ public class Main extends PluginBase {
         FakeInventories fakeInventories = new FakeInventories();
         getServer().getServiceManager().register(FakeInventories.class, fakeInventories, this, ServicePriority.HIGHEST);
         getServer().getPluginManager().registerEvents(new FakeInventoriesListener(fakeInventories), this);
+        getServer().getPluginManager().registerEvents(new MapProtect(), this);
         //USED BY THIS PLUGIN
         init.checkPlugin();
         Entity.registerEntity("BedwarsNPC", BedwarsNPC.class);
@@ -64,6 +67,8 @@ public class Main extends PluginBase {
             JSONObject room=rooms.getJSONObject(i);
             JSONObject json=room.getJSONObject("pos");
             Server.getInstance().loadLevel(json.getString("level"));
+            MapProtect.addProtectMap(json.getString("level"));
+            MapBackup.backupMap(json.getString("level"));
             Room roomC=new Room(room,room.getJSONArray("team"),room.getString("id"),room.getString("name"),room.getInteger("maxplayer"),room.getInteger("lowplayer"), Position.fromObject(new Vector3(json.getJSONObject("wait").getDouble("x"),json.getJSONObject("wait").getDouble("y"),json.getJSONObject("wait").getDouble("z")), Server.getInstance().getLevelByName(json.getString("level"))));
             JSONArray teams=room.getJSONArray("team");
             for(int j=0;j<teams.size();j++){
@@ -86,7 +91,7 @@ public class Main extends PluginBase {
         this.getLogger().info("|  _  { |  __|  | | | | | | /  | / /  / / | | |  _  /  \\___  \\ |  ___/ | |     | | | | \\___  \\");
         this.getLogger().info("| |_| | | |___  | |_| | | |/   |/ /  / /  | | | | \\ \\   ___| | | |     | |___  | |_| |  ___| |");
         this.getLogger().info("|_____/ |_____| |_____/ |___/|___/  /_/   |_| |_|  \\_\\ /_____/ |_|     |_____| \\_____/ /_____/ ");
-        this.getLogger().info("By RicoGG.§aSuccessfuly Loaded in §e"+(new Date().getTime()-stime)+"ms!");
+        this.getLogger().info("By Ricoco-Chan.§aSuccessfuly Loaded in §e"+(new Date().getTime()-stime)+"ms!");
     }
     @Override
     public void onDisable() {

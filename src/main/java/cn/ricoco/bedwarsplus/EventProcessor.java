@@ -136,10 +136,4 @@ public class EventProcessor implements Listener {
             event.setCancelled();
         }
     }
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityExplode(EntityExplodeEvent event){
-        if(event.isCancelled()){return;}
-        Room room=Main.game.getRoomByLevel(event.getPosition().level.getName());
-        List<Block> blockList=event.getBlockList();
-    }
 }
