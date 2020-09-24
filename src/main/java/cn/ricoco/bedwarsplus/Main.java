@@ -8,6 +8,8 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.plugin.service.ServicePriority;
 import cn.ricoco.bedwarsplus.entity.BedwarsNPC;
 import cn.ricoco.bedwarsplus.entity.BridgeEgg;
+import cn.ricoco.bedwarsplus.entity.IronGolem;
+import cn.ricoco.bedwarsplus.entity.Silverfish;
 import cn.ricoco.bedwarsplus.managers.ShopManager;
 import cn.ricoco.bedwarsplus.others.init;
 import cn.ricoco.funframework.entity.Fireball;
@@ -44,9 +46,12 @@ public class Main extends PluginBase {
         getServer().getPluginManager().registerEvents(new FakeInventoriesListener(fakeInventories), this);
         getServer().getPluginManager().registerEvents(new MapProtect(), this);
         //USED BY THIS PLUGIN
+        new File("./plugins/"+pluginName+"/depends").mkdirs();
         init.checkPlugin();
         Entity.registerEntity("BedwarsNPC", BedwarsNPC.class);
         Entity.registerEntity("BridgeEgg", BridgeEgg.class);
+        Entity.registerEntity("Bedwars+_IronGolem", IronGolem.class);
+        Entity.registerEntity("Bedwars+_Silverfish", Silverfish.class);
         FileUtils.loadCFG("config.json",pluginName,JarDir);
         FileUtils.loadCFG("cage.json",pluginName,JarDir);
         FileUtils.loadCFG("shop.json",pluginName,JarDir);

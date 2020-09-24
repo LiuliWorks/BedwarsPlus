@@ -110,10 +110,9 @@ public class FileUtils {
         }
         return readFile("./plugins/"+pluginName+"/"+fname);
     }
-    public static void downloadPlugin(String urlStr,String pluginName) throws IOException {
+    public static void downloadFile(String urlStr,String filePath,String fileName) throws IOException {
         long startTime=new Date().getTime();
-        Server.getInstance().getLogger().warning("CANNOT FOUND PLUGIN "+pluginName+"!DOWNLOADING FROM "+urlStr);
-        File jar = new File(Server.getInstance().getPluginPath(), urlStr.substring(urlStr.lastIndexOf('/')+1,urlStr.length()));
+        File jar = new File(filePath, fileName);
         if (jar.exists()){
             return;
         }
@@ -132,7 +131,7 @@ public class FileUtils {
             nowSize+=size;
             int progcess=100*nowSize/totalSize;
             if(progcess%5==0&&progcess!=lastSize){
-                Server.getInstance().getLogger().info("DOWNLOADING "+pluginName+" PROGCESS:"+(100*nowSize/totalSize)+"%");
+                Server.getInstance().getLogger().info("DOWNLOADING "+fileName+" PROGCESS:"+(100*nowSize/totalSize)+"%");
                 lastSize=progcess;
             }
         }
@@ -142,7 +141,11 @@ public class FileUtils {
         if(jar.exists())
             jar.delete();
         tmp.renameTo(jar);
-        Server.getInstance().getPluginManager().loadPlugin(jar.getPath());
-        Server.getInstance().getLogger().info("DOWNLOAD "+pluginName+" COMPLETE("+((new Date().getTime()-startTime)/1000)+"s)");
+        Server.getInstance().getLogger().info("DOWNLOAD "+fileName+" COMPLETE("+((new Date().getTime()-startTime)/1000)+"s)");
+    }
+    public static void downloadPlugin(String urlStr,String pluginName) throws IOException {
+        Server.getInstance().getLogger().warning("CANNOT FOUND PLUGIN "+pluginName+"!DOWNLOADING FROM "+urlStr);
+        downloadFile(urlStr,Server.getInstance().getPluginPath(),pluginName+".jar");
+        Server.getInstance().getPluginManager().loadPlugin(new File(Server.getInstance().getPluginPath(),pluginName+".jar").getPath());
     }
 }
