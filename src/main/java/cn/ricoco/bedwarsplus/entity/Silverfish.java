@@ -8,6 +8,8 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.ricoco.funframework.game.Room;
+import cn.ricoco.funframework.game.Team;
 import nukkitcoders.mobplugin.entities.monster.WalkingMonster;
 import nukkitcoders.mobplugin.route.WalkerRouteFinder;
 
@@ -17,9 +19,14 @@ public class Silverfish extends WalkingMonster implements EntityArthropod {
 
     public static final int NETWORK_ID = 39;
 
+    public String teamName="";
+    public String teamColor="";
+    public Room room=null;
+
     public Silverfish(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
         this.route = new WalkerRouteFinder(this);
+        this.setNameTagAlwaysVisible();
     }
 
     @Override
@@ -51,7 +58,14 @@ public class Silverfish extends WalkingMonster implements EntityArthropod {
 
     @Override
     public void attackEntity(Entity player) {
-        if (this.attackDelay > 23 && this.distanceSquared(player) < 1) {
+        boolean canATK=true;
+        if(room!=null && player instanceof Player){
+            Team team=room.getTeamByPlayer(player.getName());
+            if(team.name.equals(teamName)){
+                canATK=false;
+            }
+        }
+        if (this.attackDelay > 23 && this.distanceSquared(player) < 1 && canATK) {
             this.attackDelay = 0;
             HashMap<EntityDamageEvent.DamageModifier, Float> damage = new HashMap<>();
             damage.put(EntityDamageEvent.DamageModifier.BASE, this.getDamage());
@@ -83,10 +97,21 @@ public class Silverfish extends WalkingMonster implements EntityArthropod {
 
     @Override
     public boolean entityBaseTick(int tickDiff) {
-        if (getServer().getDifficulty() == 0) {
-            this.close();
-            return true;
+        StringBuilder nameTag=new StringBuilder(teamColor+teamName);
+        nameTag.append("§fHP [§a");
+        for(int i=0;i<this.getHealth();i++){
+            nameTag.append("=");
         }
+        for(int i=0;i<(this.getMaxHealth()-this.getHealth());i++){
+            nameTag.append(" ");
+        }
+        nameTag.append("§f]");
+        this.setNameTag(nameTag.toString());
         return super.entityBaseTick(tickDiff);
+    }
+
+    @Override
+    public boolean canDespawn() {
+        return false;
     }
 }
