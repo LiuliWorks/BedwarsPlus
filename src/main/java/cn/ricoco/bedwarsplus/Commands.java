@@ -113,18 +113,6 @@ public class Commands extends Command {
                 }
                 break;
             }
-            case "t": {
-                Position pos=p.getPosition();
-                Entity k = Entity.createEntity("Bedwars+_IronGolem", pos.level.getChunk(((int) pos.x) >> 4, ((int) pos.z) >> 4), Entity.getDefaultNBT(new Vector3(pos.x, pos.y, pos.z)));
-                k.spawnToAll();
-                break;
-            }
-            case "q": {
-                Position pos=p.getPosition();
-                Entity k = Entity.createEntity("Bedwars+_Silverfish", pos.level.getChunk(((int) pos.x) >> 4, ((int) pos.z) >> 4), Entity.getDefaultNBT(new Vector3(pos.x, pos.y, pos.z)));
-                k.spawnToAll();
-                break;
-            }
 //                ChestFakeInventory inv=new DoubleChestFakeInventory();
 //                for(int i=0;i<inv.getSize();i++){
 //                    Item item=Item.get(1,0);

@@ -9,7 +9,6 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
-import cn.nukkit.event.entity.EntityExplodeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
@@ -24,13 +23,12 @@ import cn.ricoco.funframework.game.Room;
 import cn.ricoco.funframework.game.Team;
 import com.alibaba.fastjson.JSONObject;
 
-import java.util.List;
-
 public class EventProcessor implements Listener {
     private final Main plugin;
     public EventProcessor(Main main) {
         this.plugin = main;
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event){
         if(event.isCancelled()){return;}
@@ -41,11 +39,11 @@ public class EventProcessor implements Listener {
             int oHId=PlayerUtils.getPlayerItemInHand(p).getId();
             if(oHId==385){
                 new FireballSpawner(p.getPosition(),p.yaw,p.pitch);
-                PlayerUtils.removeItemToPlayer(p, Item.get(385,0,1));
+                PlayerUtils.removeItemToPlayer(p, Item.get(oHId,0,1));
                 event.setCancelled();
             }else if(oHId==355&&PlayerUtils.getPlayerItemInHand(p).getCustomName().equals(Variables.langjson.getString("returntolobby"))){
                 Server.getInstance().dispatchCommand(p,"bwp leave");
-            }else if(oHId==344){
+            }else if(oHId==344||oHId==332){
                 double f = 1,pitch=p.pitch,yaw=p.yaw;
                 Position pos=p.getPosition();
                 double P = (pitch + 90.0D) * Math.PI / 180.0D;
@@ -53,16 +51,28 @@ public class EventProcessor implements Listener {
                 double posx = Math.sin(P) * Math.cos(y) * (Math.abs(90 - pitch) / 90.0D) + pos.x;
                 double posy = Math.sin(P) * 0.03D + pos.y + 1.0D + ((90 - pitch) / 90.0D);
                 double posz = Math.sin(P) * Math.sin(y) * (Math.abs(90 - pitch) / 90.0D) + pos.z;
-                Entity k = Entity.createEntity("BridgeEgg",pos.level.getChunk(((int)posx)>>4,((int)posz)>>4),Entity.getDefaultNBT(new Vector3(posx,posy,posz)));
-                BridgeEgg bridgeEgg = (BridgeEgg) k;
-                bridgeEgg.setMotion(new Vector3(-Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * f * f, -Math.sin(Math.toRadians(pitch)) * f * f,
+                String entName = "";
+                if(oHId==344){
+                    entName="BridgeEgg";
+                }else if(oHId==332){
+                    entName="Bedwars+_Snowball";
+                }
+                Entity k = Entity.createEntity(entName,pos.level.getChunk(((int)posx)>>4,((int)posz)>>4),Entity.getDefaultNBT(new Vector3(posx,posy,posz)));
+                k.setMotion(new Vector3(-Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * f * f, -Math.sin(Math.toRadians(pitch)) * f * f,
                         Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * f * f));
-                bridgeEgg.spawnToAll();
+                k.spawnToAll();
                 event.setCancelled();
-                PlayerUtils.removeItemToPlayer(p, Item.get(344,0,1));
+                PlayerUtils.removeItemToPlayer(p, Item.get(oHId,0,1));
+            }else if(oHId==383){
+                Position pos=p.getPosition();
+                Entity k = Entity.createEntity("Bedwars+_IronGolem", pos.level.getChunk(((int) pos.x) >> 4, ((int) pos.z) >> 4), Entity.getDefaultNBT(new Vector3(pos.x, pos.y, pos.z)));
+                k.spawnToAll();
+                PlayerUtils.removeItemToPlayer(p, Item.get(oHId,0,1));
+                event.setCancelled();
             }
         }
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event){
         if(event.isCancelled()){return;}
@@ -97,6 +107,7 @@ public class EventProcessor implements Listener {
             }
         }
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event){
         if(event.isCancelled()){return;}
@@ -111,6 +122,7 @@ public class EventProcessor implements Listener {
             event.setCancelled();
         }
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event){
         if(event.isCancelled()){return;}
@@ -121,6 +133,7 @@ public class EventProcessor implements Listener {
             event.setCancelled();
         }
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDropItem(PlayerDropItemEvent event){
         if(event.isCancelled()){return;}
