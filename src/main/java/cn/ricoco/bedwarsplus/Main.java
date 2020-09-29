@@ -9,6 +9,7 @@ import cn.nukkit.plugin.service.ServicePriority;
 import cn.ricoco.bedwarsplus.entity.*;
 import cn.ricoco.bedwarsplus.managers.ShopManager;
 import cn.ricoco.bedwarsplus.others.init;
+import cn.ricoco.funframework.Utils.MetricsLite;
 import cn.ricoco.funframework.entity.Fireball;
 import cn.ricoco.funframework.entity.FloatingText;
 import cn.ricoco.funframework.fakeinventories.FakeInventoriesListener;
@@ -44,6 +45,7 @@ public class Main extends PluginBase {
         getServer().getPluginManager().registerEvents(new MapProtect(), this);
         //USED BY THIS PLUGIN
         new File("./plugins/"+pluginName+"/depends").mkdirs();
+        new File("./plugins/"+pluginName+"/data/shop").mkdir();
         init.checkPlugin();
         Entity.registerEntity("BedwarsNPC", BedwarsNPC.class);
         Entity.registerEntity("BridgeEgg", BridgeEgg.class);
@@ -58,6 +60,7 @@ public class Main extends PluginBase {
         FileUtils.loadCFG("lang/ko_kr.json",pluginName,JarDir);//Korean translate by JuChanMin
         Variables.configjson=JSONObject.parseObject(FileUtils.readFile("./plugins/"+pluginName+"/config.json"));
         Variables.cagejson=JSONArray.parseArray(FileUtils.readFile("./plugins/"+pluginName+"/cage.json"));
+        Variables.shopjson=JSONArray.parseArray(FileUtils.readFile("./plugins/"+pluginName+"/shop.json"));
         String langpath="./plugins/"+pluginName+"/lang/"+Variables.configjson.getString("lang")+".json";
         if(!new File(langpath).exists()){
             plugin.getLogger().warning("LANGUAGE \""+Variables.configjson.getString("lang")+".json\" NOT FOUND.LOADING EN_US.json");
@@ -88,6 +91,7 @@ public class Main extends PluginBase {
         getServer().getPluginManager().registerEvents(new EventProcessor(this), this);
         getServer().getPluginManager().registerEvents(new ShopManager(), this);
         PluginTick.StartTick();
+        new MetricsLite(this,8868);
         this.getLogger().info(" _____   _____   _____   _          __   ___   _____    _____   _____   _       _   _   _____ ");
         this.getLogger().info("|  _  \\ | ____| |  _  \\ | |        / /  /   | |  _  \\  /  ___/ |  _  \\ | |     | | | | /  ___/");
         this.getLogger().info("| |_| | | |__   | | | | | |  __   / /  / /| | | |_| |  | |___  | |_| | | |     | | | | | |___ ");

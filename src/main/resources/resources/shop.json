@@ -1,11 +1,10 @@
 {
-  "itemshop": [
-    {
-      "slot": 1,
-      "icon":{"id":0,"data":0},
-      "name": "",
-      "items":[]
+  "itemshop":{
+    "quickbuy": {
+      
     }
-  ],
-  "enhanceshop": []
+  },
+  "enhanceshop": {
+
+  }
 }

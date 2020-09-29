@@ -8,3 +8,4 @@ website: https://bedwar.cf
 softdepend:
   - PlaceholderAPI
   - FunFramework
+  - MobPlugin
